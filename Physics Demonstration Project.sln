@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Physics Demonstration Project", "Physics Demonstration Project.csproj", "{6EF27747-9150-F5E8-FA51-E10C68DB4BFF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6EF27747-9150-F5E8-FA51-E10C68DB4BFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EF27747-9150-F5E8-FA51-E10C68DB4BFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EF27747-9150-F5E8-FA51-E10C68DB4BFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EF27747-9150-F5E8-FA51-E10C68DB4BFF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
