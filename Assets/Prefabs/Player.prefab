@@ -52,6 +52,7 @@ GameObject:
   - component: {fileID: 95388757574894410}
   - component: {fileID: 143733953236649610}
   - component: {fileID: 114288604832729726}
+  - component: {fileID: 114698698653052550}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1435,7 +1436,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1942968595164498}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.6, z: -0.1}
+  m_LocalPosition: {x: 0, y: 1.6, z: -0.183}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4690704714710946}
@@ -2204,18 +2205,35 @@ MonoBehaviour:
   mouseSensitivity: 4
   camRotationMaxClamp: 40
   camRotationMinClamp: -30
-  walkSpeed: 10
-  runSpeed: 14
+  walkSpeed: 6
+  runSpeed: 10
   jumpSpeed: 6
   crouchSpeed: 2
   gravity: 14
   groundDetectionBuffer: 0.12
   ceilingDetectionBuffer: 0.2
-  isGrounded: 0
   canStand: 0
-  doJump: 0
-  doRun: 0
-  doCrouch: 0
+  isGrounded: 0
+  running: 0
+  jumping: 0
+  crouching: 0
+--- !u!114 &114698698653052550
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1002847777657216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cd784279d301244f934010784eee281, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpKey: 20000000
+  runKey: 300100002f010000
+  crouchKey: 3201000031010000
+  attackKey: 43010000
+  secondaryAttackKey: 44010000
+  useKey: 65000000
 --- !u!114 &114832235897520748
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2504,10 +2522,10 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 1.7
+  m_Height: 1.6
   m_Radius: 0.22
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.96, z: 0}
+  m_Center: {x: 0, y: 0.9, z: 0}
