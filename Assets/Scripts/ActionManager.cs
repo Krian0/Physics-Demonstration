@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 
-public abstract class ActionManager : MonoBehaviour
+public class ActionManager : MonoBehaviour
 {
     public enum Action { DOING, STOPPING, NOT_DOING }
 

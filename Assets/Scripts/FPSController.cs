@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(ActionManager))]
@@ -9,78 +8,109 @@ public class FPSController : MonoBehaviour
     [Space(10)]
 
     public Camera FPSCam;
-    public float mouseSensitivity = 4;
-    public float camRotationMaxClamp = 40;
-    public float camRotationMinClamp = -30;
+    public float mouseSensitivity       =  4;
+    public float camRotationMaxClamp    =  40;
+    public float camRotationMinClamp    = -30;
 
     [Space(16)]
 
+    public float walkSpeed      = 10f;
+    public float runSpeed       = 14f;
+    public float jumpSpeed      = 4f;
+    public float crouchSpeed    = 2f;
+    public float gravity        = 9.81f;
 
-    public float walkSpeed = 10f;
-    public float runSpeed = 14f;
-    public float jumpSpeed = 4f;
-    public float crouchSpeed = 2f;
-    public float gravity = 9.81f;
+    [Space(16)]
 
-    [Space(10)]
-
-    public float groundDetectionBuffer = 0.1f;
+    public float crouchHeight = 0;
+    public float popUpMultiplier = 0.38f;
+    [Space(6)]
+    public float fallMultiplier = 2.5f;
+    public float lowJumpMultiplier = 1.5f;
+    [Space(6)]
+    public float groundDetectionBuffer  = 0.1f;
     public float ceilingDetectionBuffer = 0.2f;
+    public float canStandBuffer = 0.25f;
 
     [Space(16)]
 
     public bool canStand;
-    public bool isGrounded;
+    public bool isCloseToGround;
     public bool running;
     public bool jumping;
     public ActionManager.Action crouching;
 
+    [Space(16)]
+
+    public float YVelocity;
 
     private CharacterController cc;
     private ActionManager am;
     private KeyManager km;
-    private Vector3 movement;
-    private float valueY;
+
     private float rotPitch;
     private float characterHeight;
-
 
 
     void Start()
     {
         cc = GetComponent<CharacterController>();
+        am = new ActionManager();
         km = GetComponent<KeyManager>();
         characterHeight = cc.height;
     }
 
     void Awake() { }
 
-    void Update()
+    private void Update()
     {
-        detectActions();
         doActions();
+    }
+
+    private void FixedUpdate()
+    {
         rotatePlayer();
         movePlayer();
     }
 
-    void detectActions()
+    void doActions()
     {
-        canStand = !Physics.SphereCast(new Ray(transform.position + Vector3.up * characterHeight, Vector3.up), cc.radius, characterHeight / 2.9f);
-        isGrounded = Physics.SphereCast(new Ray(transform.position + (cc.radius * 1.1f) * Vector3.up, Vector3.down), cc.radius, groundDetectionBuffer);
+
+        canStand        = !Physics.SphereCast(new Ray(transform.position + Vector3.up * characterHeight, Vector3.up),       cc.radius, characterHeight * canStandBuffer);
+        isCloseToGround =  Physics.SphereCast(new Ray(transform.position + (cc.radius * 1.1f) * Vector3.up, Vector3.down),  cc.radius, groundDetectionBuffer);
 
 
+        //If we collide with the ground our velocity should be 0, and we should not be jumping
+        if (cc.isGrounded)
+        {
+            YVelocity = 0;
+
+            if (jumping)
+                jumping = false;
+        }
+
+
+        //If we crouch, our height should be as small as possible, else if we want to stand up and have the space to do so, our height should go back to normal
         if (km.getKeyPressing(km.crouchKey))
+        {
             am.setDoing(out crouching);
+            cc.height = crouchHeight;
+        }
         else if (am.doing(crouching) && canStand)
+        {
             am.setStopping(out crouching);
-        else
+            cc.height = characterHeight;
+            transform.position += new Vector3(0, characterHeight * popUpMultiplier, 0);
+        }
+        else if (am.stopping(crouching))
             am.setNotDoing(out crouching);
 
 
-        if (km.getKeyDown(km.jumpKey) && isGrounded)
+        if (km.getKeyDown(km.jumpKey) && isCloseToGround && am.notDoing(crouching))
+        {
             jumping = true;
-        else if (jumping && movement.y < -1)
-            jumping = false;
+            YVelocity = jumpSpeed;
+        }
 
 
         if (km.getKeyPressing(km.runKey) && am.notDoing(crouching))
@@ -89,31 +119,21 @@ public class FPSController : MonoBehaviour
             running = false;
     }
 
-    void doActions()
-    {
-        if (am.doing(crouching))
-            cc.height = 0;
-        else if (am.stopping(crouching))
-        {
-            valueY = 2;
-            cc.height = characterHeight;
-        }
-    }
 
-
+    //Sets the rotation of the player based on mouse input
     void rotatePlayer()
     {
         float rotYaw = Input.GetAxis("Mouse X") * mouseSensitivity;
         rotPitch -= Input.GetAxis("Mouse Y") * mouseSensitivity;
-        FPSCam.transform.localRotation = Quaternion.Euler(Mathf.Clamp(rotPitch, camRotationMinClamp, camRotationMaxClamp), 0, 0);
+        rotPitch = Mathf.Clamp(rotPitch, camRotationMinClamp, camRotationMaxClamp);
+
         transform.Rotate(0, rotYaw, 0);
+        FPSCam.transform.localRotation = Quaternion.Euler(rotPitch, 0, 0);
     }
 
     void movePlayer()
     {
-        movement = getInputXZ() + getInputY();
-        cc.Move(movement * Time.deltaTime);
-        valueY = 0;
+        cc.Move((getInputXZ() + getInputY()) * Time.deltaTime);
     }
 
     Vector3 getInputXZ()
@@ -123,17 +143,18 @@ public class FPSController : MonoBehaviour
 
     Vector3 getInputY()
     {
-        valueY -= gravity * Time.deltaTime;
+        YVelocity -= gravity * Time.deltaTime;
 
-        //Must use cc.isGrounded due to it being based on bottom capsule collision, so that the player falls accurately until landing on something
-        if (!cc.isGrounded)
-            valueY += movement.y;
-        if (jumping && cc.isGrounded)
-            valueY += jumpSpeed;
+        //Allows "Mario Jumping": Fall faster, jump higher the longer you press the jump key.
+        if (YVelocity < 0)
+            YVelocity -= gravity * (fallMultiplier - 1) * Time.deltaTime;
+        else if (YVelocity > 0 && !km.getKeyPressing(km.jumpKey))
+            YVelocity -= gravity * (lowJumpMultiplier - 1) * Time.deltaTime;
 
-        return new Vector3(0, valueY, 0);
+        return new Vector3(0, YVelocity, 0);
     }
 
+    //Return movement speed based on whether the player is walking, running, etc
     float getMoveSpeed()
     {
         if (running)
