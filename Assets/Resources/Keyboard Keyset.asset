@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf99d0a80be337049a13672f5d69563c, type: 3}
+  m_Name: Keyboard Keyset
+  m_EditorClassIdentifier: 
+  keys:
+  - name: JUMP
+    mainKey: 32
+    altKey: 32
+  - name: RUN
+    mainKey: 304
+    altKey: 303
+  - name: CROUCH
+    mainKey: 306
+    altKey: 99
+  - name: USE
+    mainKey: 101
+    altKey: 323

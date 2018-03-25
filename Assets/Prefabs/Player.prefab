@@ -52,7 +52,8 @@ GameObject:
   - component: {fileID: 95388757574894410}
   - component: {fileID: 143733953236649610}
   - component: {fileID: 114288604832729726}
-  - component: {fileID: 114698698653052550}
+  - component: {fileID: 114101061412532608}
+  - component: {fileID: 114983052589059108}
   m_Layer: 1
   m_Name: Player
   m_TagString: Untagged
@@ -1436,7 +1437,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1942968595164498}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.6, z: -0.183}
+  m_LocalPosition: {x: 0, y: 1.59, z: -0.274}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4690704714710946}
@@ -2148,7 +2149,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 56
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -2161,11 +2162,11 @@ Camera:
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
-  m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+  m_StereoMirrorMode: 0
 --- !u!81 &81713586045385818
 AudioListener:
   m_ObjectHideFlags: 1
@@ -2190,6 +2191,19 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114101061412532608
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1002847777657216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cd784279d301244f934010784eee281, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keysets:
+  - {fileID: 11400000, guid: adc682231e446834fade6300099c9839, type: 2}
 --- !u!114 &114288604832729726
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2201,45 +2215,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08c65b686bfa7184a8f78d6fa24e0233, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FPSCam: {fileID: 20556710427719666}
-  mouseSensitivity: 4
-  camRotationMaxClamp: 50
-  camRotationMinClamp: -80
   walkSpeed: 6
   runSpeed: 10
-  jumpSpeed: 8
   crouchSpeed: 2
+  jumpSpeed: 8
   gravity: 9.81
+  pushPower: 8
+  liftPower: 5
   crouchHeight: 0
-  popUpMultiplier: 0.38
+  popOutOfGround: 0.6
   fallMultiplier: 2.5
   lowJumpMultiplier: 2
-  groundDetectionBuffer: 0.4
   ceilingDetectionBuffer: 0.2
-  canStandBuffer: 0.25
+  groundDetectionBuffer: 0.4
   canStand: 0
   isCloseToGround: 0
-  running: 0
-  jumping: 0
-  crouching: 0
-  YVelocity: 0
---- !u!114 &114698698653052550
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1002847777657216}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4cd784279d301244f934010784eee281, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  jumpKey: 20000000
-  runKey: 300100002f010000
-  crouchKey: 3201000031010000
-  attackKey: 43010000
-  secondaryAttackKey: 44010000
-  useKey: 65000000
 --- !u!114 &114832235897520748
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2251,6 +2241,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37e60a97f2c87ae41b6cdc1055d78cb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mouseSensitivity: 4
+  camRotationMinClamp: -60
+  camRotationMaxClamp: 80
+  player: {fileID: 0}
+  yaw: 0
+  pitch: 0
+--- !u!114 &114983052589059108
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1002847777657216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 385cf3c9a891dd84a9b9aecfd711f76a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  taskList: []
 --- !u!124 &124250434904044746
 Behaviour:
   m_ObjectHideFlags: 1
@@ -2267,7 +2275,6 @@ SkinnedMeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -2283,7 +2290,6 @@ SkinnedMeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -2330,7 +2336,6 @@ SkinnedMeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -2346,7 +2351,6 @@ SkinnedMeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -2429,7 +2433,6 @@ SkinnedMeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -2445,7 +2448,6 @@ SkinnedMeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -2529,7 +2531,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 2
   m_Height: 1.6
-  m_Radius: 0.22
+  m_Radius: 0.3
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
