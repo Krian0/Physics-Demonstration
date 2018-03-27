@@ -55,7 +55,10 @@ public class MouseLook : MonoBehaviour
         pitch -= Input.GetAxis("Mouse Y") * mouseSensitivity;
         pitch = Mathf.Clamp(pitch, camRotationMinClamp, camRotationMaxClamp);
 
-        player.transform.Rotate(0, yaw, 0);
-        transform.localRotation = Quaternion.Euler(pitch, player.transform.rotation.y, player.transform.rotation.z);
+        if (GetComponentInParent<FPSController>().canMove)
+        {
+            player.transform.Rotate(0, yaw, 0);
+            transform.localRotation = Quaternion.Euler(pitch, player.transform.rotation.y, player.transform.rotation.z);
+        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -10,10 +9,10 @@ public enum eTask { DOING, STOPPING, NOT_DOING }
 //
 //  ACTION MANAGER
 //
-//  Contains:   A Dictionary of eActions and Tasks;
+//  Contains:   A Dictionary of ints and Tasks;
 //              A List of Tasks, viewable in the Inspector;
 //
-//  Use:        Require this as a component of the controllable character;
+//  Use:        Require as a Component of GameObject, use the setActionManager function;
 //              Use the doing/stopping/notDoing functions to return a bool based on if the Action Pair's Task is set to the corresponding eTask value;
 //              Use the nowDoing/Stopping/NotDoing function to set a specific Action Pair's Task to the corresponding eTask value;
 //
@@ -25,58 +24,56 @@ public enum eTask { DOING, STOPPING, NOT_DOING }
 //
 //  Notes:      The taskList will not appear in the Inspector until the game is running, but once it is you can click the dropdown arrows to see
 //              the current eTask state for each Action Pair;
-//              ActionList has a mystery green squiggle. It doesn't seem to be causing any issues, though;
 //
 //-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 public class ActionManager : MonoBehaviour
 {
-    private Dictionary<eActions, Task> actionList = new Dictionary<eActions, Task>();
+    private Dictionary<int, Task> actionList = new Dictionary<int, Task>();
     public List<Task> taskList;
 
 
-    private void Start()
+    public void setActionManager(int actionSize, string[] enumNames)
     {
-        foreach (eActions action in Enum.GetValues(typeof(eActions)))
-            actionList.Add(action, new Task(eTask.NOT_DOING, action.ToString()));
+        for (int i = 0; i < actionSize; i++)
+            actionList.Add(i, new Task(eTask.NOT_DOING, enumNames[i]));
 
         taskList = actionList.Values.ToList();
-        taskList.RemoveAt((int)eActions.ENUM_END);
     }
 
 
-    public bool doing(eActions keyAction)
+    public bool doing(int index)
     {
-        return actionList[keyAction].doing();
+        return actionList[index].doing();
     }
 
-    public bool stopping(eActions keyAction)
+    public bool stopping(int index)
     {
-        return actionList[keyAction].stopping();
+        return actionList[index].stopping();
     }
 
-    public bool notDoing(eActions keyAction)
+    public bool notDoing(int index)
     {
-        return actionList[keyAction].notDoing();
+        return actionList[index].notDoing();
     }
 
 
-    public void nowDoing(eActions keyAction)
+    public void nowDoing(int index)
     {
-        taskList[(int)keyAction].changeTask(eTask.DOING);
-        actionList[keyAction].changeTask(eTask.DOING);
+        taskList[index].changeTask(eTask.DOING);
+        actionList[index].changeTask(eTask.DOING);
     }
 
-    public void nowStopping(eActions keyAction)
+    public void nowStopping(int index)
     {
-        taskList[(int)keyAction].changeTask(eTask.STOPPING);
-        actionList[keyAction].changeTask(eTask.STOPPING);
+        taskList[index].changeTask(eTask.STOPPING);
+        actionList[index].changeTask(eTask.STOPPING);
     }
 
-    public void nowNotDoing(eActions keyAction)
+    public void nowNotDoing(int index)
     {
-        taskList[(int)keyAction].changeTask(eTask.NOT_DOING);
-        actionList[keyAction].changeTask(eTask.NOT_DOING);
+        taskList[index].changeTask(eTask.NOT_DOING);
+        actionList[index].changeTask(eTask.NOT_DOING);
     }
 }

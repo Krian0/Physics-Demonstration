@@ -31,7 +31,6 @@
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(ActionManager))]
 [RequireComponent(typeof(InputManager))]
-[RequireComponent(typeof(Animator))]
 public class FPSController : MonoBehaviour
 {
     [Space(10)]
@@ -59,17 +58,15 @@ public class FPSController : MonoBehaviour
 
     public bool canStand;
     public bool isCloseToGround;
-
+    public bool canMove = true;
 
     //Managers and Controllers
     private CharacterController cc;
     private ActionManager am;
     private InputManager im;
-    private Animator a;
 
     //Character Height
     private float characterHeight;
-
 
 
 
@@ -80,8 +77,9 @@ public class FPSController : MonoBehaviour
         cc = GetComponent<CharacterController>();
         am = GetComponent<ActionManager>();
         im = GetComponent<InputManager>();
-        a = GetComponent<Animator>();
         characterHeight = cc.height;
+
+        am.setActionManager((int)eActions.ENUM_END, System.Enum.GetNames(typeof(eActions)));
     }
 
 
@@ -89,12 +87,26 @@ public class FPSController : MonoBehaviour
     private void Update()
     {
         doActions();
-        a.SetFloat("Speed", Input.GetAxis("Vertical") * 80 * Time.deltaTime);
+        if (im.getKeyDown(eActions.USE))
+        {
+
+            Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {
+                Rigidbody rb = hit.transform.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    rb.AddForce(Camera.main.transform.forward * pushPower);
+                }
+            }
+        }
     }
 
     private void FixedUpdate()
     {
-        cc.Move((getInputXZ() + getInputY()) * Time.deltaTime);
+        if (canMove)
+            cc.Move((getInputXZ() + getInputY()) * Time.deltaTime);
     }
 
     void OnControllerColliderHit(ControllerColliderHit hit)
@@ -112,7 +124,7 @@ public class FPSController : MonoBehaviour
             mag *= -1;
 
         Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
-        body.velocity = pushDir * (mag + pushPower - body.mass);
+        body.AddForce(pushDir * mag * pushPower);
     }
 
 
@@ -128,38 +140,38 @@ public class FPSController : MonoBehaviour
         {
             YVelocity = 0;
 
-            if (am.doing(eActions.JUMP))
-                am.nowNotDoing(eActions.JUMP);
+            if (am.doing((int)eActions.JUMP))
+                am.nowNotDoing((int)eActions.JUMP);
         }
 
 
         //If we crouch, our height should be reduced by a specified amount, else if we want to stand up and have the space to do so, our height should go back to normal
         if (im.getKey(eActions.CROUCH))
         {
-            am.nowDoing(eActions.CROUCH);
+            am.nowDoing((int)eActions.CROUCH);
             cc.height = crouchHeight;
         }
-        else if (am.doing(eActions.CROUCH) && canStand)
+        else if (am.doing((int)eActions.CROUCH) && canStand)
         {
-            am.nowStopping(eActions.CROUCH);
+            am.nowStopping((int)eActions.CROUCH);
             cc.height = characterHeight;
             transform.position += new Vector3(0, popOutOfGround, 0);
         }
-        else if (am.stopping(eActions.CROUCH))
-            am.nowNotDoing(eActions.CROUCH);
+        else if (am.stopping((int)eActions.CROUCH))
+            am.nowNotDoing((int)eActions.CROUCH);
 
 
-        if (im.getKeyDown(eActions.JUMP) && isCloseToGround && am.notDoing(eActions.CROUCH))
+        if (im.getKeyDown(eActions.JUMP) && isCloseToGround && am.notDoing((int)eActions.CROUCH))
         {
-            am.nowDoing(eActions.JUMP);
+            am.nowDoing((int)eActions.JUMP);
             YVelocity = jumpSpeed;
         }
 
 
-        if (im.getKey(eActions.RUN) && am.notDoing(eActions.CROUCH))
-            am.nowDoing(eActions.RUN);
+        if (im.getKey(eActions.RUN) && am.notDoing((int)eActions.CROUCH))
+            am.nowDoing((int)eActions.RUN);
         else
-            am.nowNotDoing(eActions.RUN);
+            am.nowNotDoing((int)eActions.RUN);
     }
 
 
@@ -185,11 +197,11 @@ public class FPSController : MonoBehaviour
 
 
     //Return movement speed based on whether the player is walking, running, etc
-    float getMoveSpeed()
+    public float getMoveSpeed()
     {
-        if (am.doing(eActions.RUN))
+        if (am.doing((int)eActions.RUN))
             return runSpeed;
-        if (am.doing(eActions.CROUCH))
+        if (am.doing((int)eActions.CROUCH))
             return crouchSpeed;
 
         return walkSpeed;
