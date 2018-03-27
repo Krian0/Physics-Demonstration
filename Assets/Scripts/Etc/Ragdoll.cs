@@ -29,9 +29,4 @@ public class Ragdoll : MonoBehaviour
         foreach (Rigidbody r in rigidbodies)
             r.isKinematic = true;
 	}
-	
-	void Update ()
-    {
-        
-	}
 }

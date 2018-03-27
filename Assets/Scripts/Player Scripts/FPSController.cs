@@ -68,6 +68,7 @@ public class FPSController : MonoBehaviour
     //Character Height
     private float characterHeight;
 
+    private Vector3 movement;
 
 
     //FUNCTIONS
@@ -101,12 +102,14 @@ public class FPSController : MonoBehaviour
                 }
             }
         }
+
+        movement = (getInputXZ() + getInputY());
     }
 
     private void FixedUpdate()
     {
         if (canMove)
-            cc.Move((getInputXZ() + getInputY()) * Time.deltaTime);
+            cc.Move(movement * Time.fixedDeltaTime);
     }
 
     void OnControllerColliderHit(ControllerColliderHit hit)

@@ -301,6 +301,7 @@
     <Compile Include="Assets\Scripts\Environ\EnvironmentOutput.cs" />
     <Compile Include="Assets\Scripts\Environ\EnvironmentReceiver.cs" />
     <Compile Include="Assets\Scripts\Etc\DoorScript.cs" />
+    <Compile Include="Assets\Scripts\Etc\EscToQuit.cs" />
     <Compile Include="Assets\Scripts\Etc\Ragdoll.cs" />
     <Compile Include="Assets\Scripts\Etc\RagdollTrigger.cs" />
     <Compile Include="Assets\Scripts\Input Scripts\ActionManager.cs" />

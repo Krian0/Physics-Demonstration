@@ -49,7 +49,7 @@ public class MouseLook : MonoBehaviour
         player = transform.parent.gameObject;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         yaw = Input.GetAxis("Mouse X") * mouseSensitivity;
         pitch -= Input.GetAxis("Mouse Y") * mouseSensitivity;
